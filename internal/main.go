@@ -128,19 +128,19 @@ func RunMain() {
 	}
 	if *carootFlag {
 		if *installFlag || *uninstallFlag {
-			log.Fatalln("ERROR: you can't set -[un]install and -CAROOT at the same time")
+			panic("ERROR: you can't set -[un]install and -CAROOT at the same time")
 		}
 		fmt.Println(getCAROOT())
 		return
 	}
 	if *installFlag && *uninstallFlag {
-		log.Fatalln("ERROR: you can't set -install and -uninstall at the same time")
+		panic("ERROR: you can't set -install and -uninstall at the same time")
 	}
 	if *csrFlag != "" && (*pkcs12Flag || *ecdsaFlag || *clientFlag) {
-		log.Fatalln("ERROR: can only combine -csr with -install and -cert-file")
+		panic("ERROR: can only combine -csr with -install and -cert-file")
 	}
 	if *csrFlag != "" && flag.NArg() != 0 {
-		log.Fatalln("ERROR: can't specify extra arguments when using -csr")
+		panic("ERROR: can't specify extra arguments when using -csr")
 	}
 	(&mkcert{
 		installMode: *installFlag, uninstallMode: *uninstallFlag, csrPath: *csrFlag,
@@ -171,7 +171,7 @@ type mkcert struct {
 func (m *mkcert) Run(args []string) {
 	m.CAROOT = getCAROOT()
 	if m.CAROOT == "" {
-		log.Fatalln("ERROR: failed to find the default CA location, set one as the CAROOT env var")
+		panic("ERROR: failed to find the default CA location, set one as the CAROOT env var")
 	}
 	fatalIfErr(os.MkdirAll(m.CAROOT, 0755), "failed to create the CAROOT")
 	m.loadCA()
@@ -226,11 +226,11 @@ func (m *mkcert) Run(args []string) {
 		}
 		punycode, err := idna.ToASCII(name)
 		if err != nil {
-			log.Fatalf("ERROR: %q is not a valid hostname, IP, URL or email: %s", name, err)
+			panic(fmt.Sprintf("ERROR: %q is not a valid hostname, IP, URL or email: %s", name, err))
 		}
 		args[i] = punycode
 		if !hostnameRegexp.MatchString(punycode) {
-			log.Fatalf("ERROR: %q is not a valid hostname, IP, URL or email", name)
+			panic(fmt.Sprintf("ERROR: %q is not a valid hostname, IP, URL or email", name))
 		}
 	}
 
@@ -357,13 +357,13 @@ func storeEnabled(name string) bool {
 
 func fatalIfErr(err error, msg string) {
 	if err != nil {
-		log.Fatalf("ERROR: %s: %s", msg, err)
+		panic(fmt.Sprintf("ERROR: %s: %s", msg, err))
 	}
 }
 
 func fatalIfCmdErr(err error, cmd string, out []byte) {
 	if err != nil {
-		log.Fatalf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out)
+		panic(fmt.Sprintf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out))
 	}
 }
 

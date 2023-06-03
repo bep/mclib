@@ -7,8 +7,8 @@ package internal
 import (
 	"bytes"
 	"encoding/asn1"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -74,7 +74,7 @@ func (m *mkcert) installPlatform() bool {
 	rootSubjectASN1, _ := asn1.Marshal(m.caCert.Subject.ToRDNSequence())
 
 	if plistRoot["trustVersion"].(uint64) != 1 {
-		log.Fatalln("ERROR: unsupported trust settings version:", plistRoot["trustVersion"])
+		panic(fmt.Sprint("ERROR: unsupported trust settings version:", plistRoot["trustVersion"]))
 	}
 	trustList := plistRoot["trustList"].(map[string]interface{})
 	for key := range trustList {

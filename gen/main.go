@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/bep/helpers/filehelpers"
@@ -37,6 +38,16 @@ func main() {
 		if strings.HasSuffix(path, "main.go") {
 			s = strings.Replace(s, "func main()", "func RunMain()", 1)
 		}
+
+		// We don't want os.Exit(-1) in a library.
+		// E.g. log.Fatalf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out)
+		// Replace with panic.
+		// NOTE: These are currently not perfect, so some edits may be needed.
+		fatalFRe := regexp.MustCompile(`log.Fatalf\((.*)\)`)
+		s = fatalFRe.ReplaceAllString(s, "panic(fmt.Sprintf($1))")
+
+		fatalLnRe := regexp.MustCompile(`log.Fatalln\((.*)\)`)
+		s = fatalLnRe.ReplaceAllString(s, "panic($1)")
 
 		// Write to the same file.
 		if err := ioutil.WriteFile(path, []byte(s), info.Mode()); err != nil {
