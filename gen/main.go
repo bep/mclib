@@ -36,6 +36,14 @@ func main() {
 
 	fileReplacer := strings.NewReplacer(
 		"getCAROOT()", "GetCAROOT()",
+		"mkcert -install", "hugo server trust",
+		"mkcert -uninstall", "hugo server trust -uninstall",
+		" 👈", "",
+		" 👍", "",
+		"  🦊", "",
+		" ℹ️", "",
+		" ⚠️", "",
+		" 👋", "",
 	)
 
 	err := filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {

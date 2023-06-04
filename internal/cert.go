@@ -140,7 +140,7 @@ func (m *mkcert) makeCert(hosts []string) {
 		}
 	} else {
 		log.Printf("\nThe PKCS#12 bundle is at \"%s\" ✅\n", p12File)
-		log.Printf("\nThe legacy PKCS#12 encryption password is the often hardcoded default \"changeit\" ℹ️\n\n")
+		log.Printf("\nThe legacy PKCS#12 encryption password is the often hardcoded default \"changeit\"\n\n")
 	}
 
 	log.Printf("It will expire on %s 🗓\n\n", expiration.Format("2 January 2006"))
@@ -152,13 +152,13 @@ func (m *mkcert) printHosts(hosts []string) {
 	for _, h := range hosts {
 		log.Printf(" - %q", h)
 		if secondLvlWildcardRegexp.MatchString(h) {
-			log.Printf("   Warning: many browsers don't support second-level wildcards like %q ⚠️", h)
+			log.Printf("   Warning: many browsers don't support second-level wildcards like %q", h)
 		}
 	}
 
 	for _, h := range hosts {
 		if strings.HasPrefix(h, "*.") {
-			log.Printf("\nReminder: X.509 wildcards only go one level deep, so this won't match a.b.%s ℹ️", h[2:])
+			log.Printf("\nReminder: X.509 wildcards only go one level deep, so this won't match a.b.%s", h[2:])
 			break
 		}
 	}
