@@ -3,5 +3,20 @@
 [![GoDoc](https://godoc.org/github.com/bep/mclib?status.svg)](https://godoc.org/github.com/bep/mclib)
 
 
- git subtree add --prefix mkcert https://github.com/FiloSottile/mkcert.git master --squash
- go generate ./gen
+This is a simple library to make it possible to run [Mkcert's](https://github.com/FiloSottile/mkcert)  `main` method.
+
+Yhe script that updates the `internal` package does no logic changes to the source, it
+
+1. Renames the `main` package to `internal`.
+1. Renames the `main` func to `RunMain`
+1. Replaces any `log.Fatal` with `panic` to allow us to handle the errors.
+
+For more advanced library usage, see [this issue](https://github.com/FiloSottile/mkcert/issues/45).
+
+The `mkcert` source code is stored in a Git submodule to a tagged version, so you need to clone this repo with `--recursive`.  To prepare a new version, run:
+
+```bash
+go generate ./gen
+```
+
+We use [semverpair](https://github.com/bep/semverpair) versioning.
