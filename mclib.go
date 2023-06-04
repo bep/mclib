@@ -29,3 +29,8 @@ func RunMain() (err error) {
 	internal.RunMain()
 	return
 }
+
+// GetCAROOT returns the CA root directory.
+func GetCAROOT() string {
+	return internal.GetCAROOT()
+}

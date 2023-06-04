@@ -32,6 +32,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fileReplacer := strings.NewReplacer(
+		"getCAROOT()", "GetCAROOT()",
+	)
+
 	err = filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
 		if info == nil || info.IsDir() {
 			return nil
@@ -47,6 +51,8 @@ func main() {
 		if strings.HasSuffix(path, "main.go") {
 			s = strings.Replace(s, "func main()", "func RunMain()", 1)
 		}
+
+		s = fileReplacer.Replace(s)
 
 		// We don't want os.Exit(-1) in a library.
 		// E.g. log.Fatalf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out)

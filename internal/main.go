@@ -130,7 +130,7 @@ func RunMain() {
 		if *installFlag || *uninstallFlag {
 			panic(fmt.Sprintln("ERROR: you can't set -[un]install and -CAROOT at the same time"))
 		}
-		fmt.Println(getCAROOT())
+		fmt.Println(GetCAROOT())
 		return
 	}
 	if *installFlag && *uninstallFlag {
@@ -169,7 +169,7 @@ type mkcert struct {
 }
 
 func (m *mkcert) Run(args []string) {
-	m.CAROOT = getCAROOT()
+	m.CAROOT = GetCAROOT()
 	if m.CAROOT == "" {
 		panic(fmt.Sprintln("ERROR: failed to find the default CA location, set one as the CAROOT env var"))
 	}
@@ -237,7 +237,7 @@ func (m *mkcert) Run(args []string) {
 	m.makeCert(args)
 }
 
-func getCAROOT() string {
+func GetCAROOT() string {
 	if env := os.Getenv("CAROOT"); env != "" {
 		return env
 	}

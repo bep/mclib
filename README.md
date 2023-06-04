@@ -10,6 +10,7 @@ Yhe script that updates the `internal` package does no logic changes to the sour
 1. Renames the `main` package to `internal`.
 1. Renames the `main` func to `RunMain`
 1. Replaces any `log.Fatal` with `panic` to allow us to handle the errors.
+1. getCAROOT() is exported.
 
 For more advanced library usage, see [this issue](https://github.com/FiloSottile/mkcert/issues/45).
 
