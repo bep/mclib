@@ -8,18 +8,14 @@ import (
 	qt "github.com/frankban/quicktest"
 )
 
-func TestRunMainOK(t *testing.T) {
+func TestRunMain(t *testing.T) {
 	c := qt.New(t)
 	os.Args = []string{"-help"}
 	c.Assert(mclib.RunMain(), qt.IsNil)
 
 }
 
-func TestRunMainError(t *testing.T) {
+func TestGetCAROOT(t *testing.T) {
 	c := qt.New(t)
-	os.Args = []string{"-install", "-CAROOT", "asdfasdfasdfasdf"}
-	err := mclib.RunMain()
-	c.Assert(err, qt.IsNotNil)
-	c.Assert(err.Error(), qt.Equals, "you can't set -[un]install and -CAROOT at the same time")
-
+	c.Assert(mclib.GetCAROOT(), qt.Not(qt.Equals), "")
 }

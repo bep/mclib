@@ -12,6 +12,12 @@ var errorReplacer = strings.NewReplacer(
 	"ERROR: ", "",
 )
 
+// RunMain runs mkcert's main function.
+//
+// You need to set os.Args before calling this function, e.g.
+//
+//	os.Args = []string{"-install"}
+//	os.Args = []string{"-cert-file", "cert.pem", "-key-file", "key.pem", "example.com"}
 func RunMain() (err error) {
 	defer func() {
 		if r := recover(); r != nil {
