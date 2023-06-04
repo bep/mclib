@@ -128,19 +128,19 @@ func RunMain() {
 	}
 	if *carootFlag {
 		if *installFlag || *uninstallFlag {
-			panic("ERROR: you can't set -[un]install and -CAROOT at the same time")
+			panic(fmt.Sprintln("ERROR: you can't set -[un]install and -CAROOT at the same time"))
 		}
 		fmt.Println(getCAROOT())
 		return
 	}
 	if *installFlag && *uninstallFlag {
-		panic("ERROR: you can't set -install and -uninstall at the same time")
+		panic(fmt.Sprintln("ERROR: you can't set -install and -uninstall at the same time"))
 	}
 	if *csrFlag != "" && (*pkcs12Flag || *ecdsaFlag || *clientFlag) {
-		panic("ERROR: can only combine -csr with -install and -cert-file")
+		panic(fmt.Sprintln("ERROR: can only combine -csr with -install and -cert-file"))
 	}
 	if *csrFlag != "" && flag.NArg() != 0 {
-		panic("ERROR: can't specify extra arguments when using -csr")
+		panic(fmt.Sprintln("ERROR: can't specify extra arguments when using -csr"))
 	}
 	(&mkcert{
 		installMode: *installFlag, uninstallMode: *uninstallFlag, csrPath: *csrFlag,
@@ -171,7 +171,7 @@ type mkcert struct {
 func (m *mkcert) Run(args []string) {
 	m.CAROOT = getCAROOT()
 	if m.CAROOT == "" {
-		panic("ERROR: failed to find the default CA location, set one as the CAROOT env var")
+		panic(fmt.Sprintln("ERROR: failed to find the default CA location, set one as the CAROOT env var"))
 	}
 	fatalIfErr(os.MkdirAll(m.CAROOT, 0755), "failed to create the CAROOT")
 	m.loadCA()

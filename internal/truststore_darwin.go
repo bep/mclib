@@ -74,7 +74,7 @@ func (m *mkcert) installPlatform() bool {
 	rootSubjectASN1, _ := asn1.Marshal(m.caCert.Subject.ToRDNSequence())
 
 	if plistRoot["trustVersion"].(uint64) != 1 {
-		panic(fmt.Sprint("ERROR: unsupported trust settings version:", plistRoot["trustVersion"]))
+		panic(fmt.Sprintln("ERROR: unsupported trust settings version:", plistRoot["trustVersion"]))
 	}
 	trustList := plistRoot["trustList"].(map[string]interface{})
 	for key := range trustList {

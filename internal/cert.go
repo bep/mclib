@@ -15,6 +15,7 @@ import (
 	"crypto/x509/pkix"
 	"encoding/asn1"
 	"encoding/pem"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -49,7 +50,7 @@ func init() {
 
 func (m *mkcert) makeCert(hosts []string) {
 	if m.caKey == nil {
-		panic("ERROR: can't create new certificates because the CA key (rootCA-key.pem) is missing")
+		panic(fmt.Sprintln("ERROR: can't create new certificates because the CA key (rootCA-key.pem) is missing"))
 	}
 
 	priv, err := m.generateKey(false)
@@ -208,18 +209,18 @@ func randomSerialNumber() *big.Int {
 
 func (m *mkcert) makeCertFromCSR() {
 	if m.caKey == nil {
-		panic("ERROR: can't create new certificates because the CA key (rootCA-key.pem) is missing")
+		panic(fmt.Sprintln("ERROR: can't create new certificates because the CA key (rootCA-key.pem) is missing"))
 	}
 
 	csrPEMBytes, err := ioutil.ReadFile(m.csrPath)
 	fatalIfErr(err, "failed to read the CSR")
 	csrPEM, _ := pem.Decode(csrPEMBytes)
 	if csrPEM == nil {
-		panic("ERROR: failed to read the CSR: unexpected content")
+		panic(fmt.Sprintln("ERROR: failed to read the CSR: unexpected content"))
 	}
 	if csrPEM.Type != "CERTIFICATE REQUEST" &&
 		csrPEM.Type != "NEW CERTIFICATE REQUEST" {
-		panic("ERROR: failed to read the CSR: expected CERTIFICATE REQUEST, got " + csrPEM.Type)
+		panic(fmt.Sprintln("ERROR: failed to read the CSR: expected CERTIFICATE REQUEST, got " + csrPEM.Type))
 	}
 	csr, err := x509.ParseCertificateRequest(csrPEM.Bytes)
 	fatalIfErr(err, "failed to parse the CSR")
@@ -288,7 +289,7 @@ func (m *mkcert) loadCA() {
 	fatalIfErr(err, "failed to read the CA certificate")
 	certDERBlock, _ := pem.Decode(certPEMBlock)
 	if certDERBlock == nil || certDERBlock.Type != "CERTIFICATE" {
-		panic("ERROR: failed to read the CA certificate: unexpected content")
+		panic(fmt.Sprintln("ERROR: failed to read the CA certificate: unexpected content"))
 	}
 	m.caCert, err = x509.ParseCertificate(certDERBlock.Bytes)
 	fatalIfErr(err, "failed to parse the CA certificate")
@@ -301,7 +302,7 @@ func (m *mkcert) loadCA() {
 	fatalIfErr(err, "failed to read the CA key")
 	keyDERBlock, _ := pem.Decode(keyPEMBlock)
 	if keyDERBlock == nil || keyDERBlock.Type != "PRIVATE KEY" {
-		panic("ERROR: failed to read the CA key: unexpected content")
+		panic(fmt.Sprintln("ERROR: failed to read the CA key: unexpected content"))
 	}
 	m.caKey, err = x509.ParsePKCS8PrivateKey(keyDERBlock.Bytes)
 	fatalIfErr(err, "failed to parse the CA key")

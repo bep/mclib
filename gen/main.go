@@ -15,15 +15,24 @@ import (
 
 func main() {
 	rootDir := "../"
-	if err := os.MkdirAll(filepath.Join(rootDir, "internal"), 0755); err != nil {
+	internalDir := filepath.Join(rootDir, "internal")
+	// Remove old files.
+	if err := os.RemoveAll(internalDir); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.MkdirAll(internalDir, 0755); err != nil {
 		log.Fatal(err)
 	}
 
-	filehelpers.CopyDir(filepath.Join(rootDir, "mkcert"), filepath.Join(rootDir, "internal"), func(path string) bool {
+	err := filehelpers.CopyDir(filepath.Join(rootDir, "mkcert"), internalDir, func(path string) bool {
 		return filepath.Ext(path) == ".go" && !strings.HasSuffix(path, "_test.go")
 	})
 
-	err := filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
 		if info == nil || info.IsDir() {
 			return nil
 		}
@@ -42,12 +51,12 @@ func main() {
 		// We don't want os.Exit(-1) in a library.
 		// E.g. log.Fatalf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out)
 		// Replace with panic.
-		// NOTE: These are currently not perfect, so some edits may be needed.
+		// NOTE: These are currently not perfect, so some edits may be needed (missing imports).
 		fatalFRe := regexp.MustCompile(`log.Fatalf\((.*)\)`)
 		s = fatalFRe.ReplaceAllString(s, "panic(fmt.Sprintf($1))")
 
 		fatalLnRe := regexp.MustCompile(`log.Fatalln\((.*)\)`)
-		s = fatalLnRe.ReplaceAllString(s, "panic($1)")
+		s = fatalLnRe.ReplaceAllString(s, "panic(fmt.Sprintln($1))")
 
 		// Write to the same file.
 		if err := ioutil.WriteFile(path, []byte(s), info.Mode()); err != nil {
