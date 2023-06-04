@@ -24,11 +24,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err := filehelpers.CopyDir(filepath.Join(rootDir, "mkcert"), internalDir, func(path string) bool {
+	if err := filehelpers.CopyDir(filepath.Join(rootDir, "mkcert"), internalDir, func(path string) bool {
 		return filepath.Ext(path) == ".go" && !strings.HasSuffix(path, "_test.go")
-	})
+	}); err != nil {
+		log.Fatal(err)
+	}
 
-	if err != nil {
+	if err := filehelpers.CopyFile("./truststore_other.go.txt", filepath.Join(internalDir, "truststore_other.go")); err != nil {
 		log.Fatal(err)
 	}
 
@@ -36,7 +38,7 @@ func main() {
 		"getCAROOT()", "GetCAROOT()",
 	)
 
-	err = filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
 		if info == nil || info.IsDir() {
 			return nil
 		}
