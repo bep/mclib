@@ -267,20 +267,20 @@ func GetCAROOT() string {
 func (m *mkcert) install() {
 	if storeEnabled("system") {
 		if m.checkPlatform() {
-			log.Print("The local CA is already installed in the system trust store!")
+			log.Print("The local CA is already installed in the system trust store.")
 		} else {
 			if m.installPlatform() {
-				log.Print("The local CA is now installed in the system trust store! ⚡️")
+				log.Print("The local CA is now installed in the system trust store.")
 			}
 			m.ignoreCheckFailure = true // TODO: replace with a check for a successful install
 		}
 	}
 	if storeEnabled("nss") && hasNSS {
 		if m.checkNSS() {
-			log.Printf("The local CA is already installed in the %s trust store!", NSSBrowsers)
+			log.Printf("The local CA is already installed in the %s trust store.", NSSBrowsers)
 		} else {
 			if hasCertutil && m.installNSS() {
-				log.Printf("The local CA is now installed in the %s trust store (requires browser restart)! 🦊", NSSBrowsers)
+				log.Printf("The local CA is now installed in the %s trust store (requires browser restart).", NSSBrowsers)
 			} else if CertutilInstallHelp == "" {
 				log.Printf(`Note: %s support is not available on your platform.`, NSSBrowsers)
 			} else if !hasCertutil {
@@ -291,7 +291,7 @@ func (m *mkcert) install() {
 	}
 	if storeEnabled("java") && hasJava {
 		if m.checkJava() {
-			log.Println("The local CA is already installed in Java's trust store!")
+			log.Println("The local CA is already installed in Java's trust store.")
 		} else {
 			if hasKeytool {
 				m.installJava()
@@ -325,10 +325,10 @@ func (m *mkcert) uninstall() {
 		}
 	}
 	if storeEnabled("system") && m.uninstallPlatform() {
-		log.Print("The local CA is now uninstalled from the system trust store(s)!")
+		log.Print("The local CA is now uninstalled from the system trust store(s).")
 		log.Print("")
 	} else if storeEnabled("nss") && hasCertutil {
-		log.Printf("The local CA is now uninstalled from the %s trust store(s)!", NSSBrowsers)
+		log.Printf("The local CA is now uninstalled from the %s trust store(s).", NSSBrowsers)
 		log.Print("")
 	}
 }

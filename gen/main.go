@@ -40,10 +40,11 @@ func main() {
 		"mkcert -uninstall", "hugo server trust -uninstall",
 		" 👈", "",
 		" 👍", "",
-		"  🦊", "",
+		" 🦊", "",
 		" ℹ️", "",
 		" ⚠️", "",
 		" 👋", "",
+		" ⚡️", "",
 	)
 
 	err := filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
@@ -63,6 +64,7 @@ func main() {
 		}
 
 		s = fileReplacer.Replace(s)
+		s = strings.Replace(s, `!"`, `."`, -1)
 
 		// We don't want os.Exit(-1) in a library.
 		// E.g. log.Fatalf("ERROR: failed to execute \"%s\": %s\n\n%s\n", cmd, err, out)
