@@ -1,6 +1,7 @@
 package mclib
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -23,7 +24,7 @@ func RunMain() (err error) {
 		if r := recover(); r != nil {
 			errStr := fmt.Sprintf("%v", r)
 			errStr = errorReplacer.Replace(errStr)
-			err = fmt.Errorf(errStr)
+			err = errors.New(errStr)
 		}
 	}()
 
