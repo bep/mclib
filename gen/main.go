@@ -3,7 +3,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -20,7 +19,7 @@ func main() {
 	if err := os.RemoveAll(internalDir); err != nil {
 		log.Fatal(err)
 	}
-	if err := os.MkdirAll(internalDir, 0755); err != nil {
+	if err := os.MkdirAll(internalDir, 0o755); err != nil {
 		log.Fatal(err)
 	}
 
@@ -48,10 +47,13 @@ func main() {
 	)
 
 	err := filepath.Walk(filepath.Join(rootDir, "internal"), func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		if info == nil || info.IsDir() {
 			return nil
 		}
-		b, err := ioutil.ReadFile(path)
+		b, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
@@ -77,16 +79,13 @@ func main() {
 		s = fatalLnRe.ReplaceAllString(s, "panic(fmt.Sprintln($1))")
 
 		// Write to the same file.
-		if err := ioutil.WriteFile(path, []byte(s), info.Mode()); err != nil {
+		if err := os.WriteFile(path, []byte(s), info.Mode()); err != nil {
 			return err
 		}
 
 		return nil
-
 	})
-
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
