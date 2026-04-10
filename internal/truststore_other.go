@@ -1,4 +1,4 @@
-//go:build dragonfly || freebsd || openbsd || netbsd || solaris
+//go:build dragonfly || freebsd || openbsd || netbsd || solaris || wasm
 
 package internal
 
