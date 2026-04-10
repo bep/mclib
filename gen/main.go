@@ -5,6 +5,7 @@ package main
 import (
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -90,6 +91,13 @@ func main() {
 		return nil
 	})
 	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Fix missing/unused imports after the replacements above.
+	cmd := exec.Command("goimports", "-w", internalDir)
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
