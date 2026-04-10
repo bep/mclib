@@ -22,7 +22,7 @@ var (
 )
 
 // https://github.com/golang/go/issues/24652#issuecomment-399826583
-var trustSettings []any
+var trustSettings []interface{}
 var _, _ = plist.Unmarshal(trustSettingsData, &trustSettings)
 var trustSettingsData = []byte(`
 <array>
@@ -67,7 +67,7 @@ func (m *mkcert) installPlatform() bool {
 
 	plistData, err := ioutil.ReadFile(plistFile.Name())
 	fatalIfErr(err, "failed to read trust settings")
-	var plistRoot map[string]any
+	var plistRoot map[string]interface{}
 	_, err = plist.Unmarshal(plistData, &plistRoot)
 	fatalIfErr(err, "failed to parse trust settings")
 
@@ -76,9 +76,9 @@ func (m *mkcert) installPlatform() bool {
 	if plistRoot["trustVersion"].(uint64) != 1 {
 		panic(fmt.Sprintln("ERROR: unsupported trust settings version:", plistRoot["trustVersion"]))
 	}
-	trustList := plistRoot["trustList"].(map[string]any)
+	trustList := plistRoot["trustList"].(map[string]interface{})
 	for key := range trustList {
-		entry := trustList[key].(map[string]any)
+		entry := trustList[key].(map[string]interface{})
 		if _, ok := entry["issuerName"]; !ok {
 			continue
 		}
