@@ -33,6 +33,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err := filehelpers.CopyFile("./staticcheck.conf", filepath.Join(internalDir, "staticcheck.conf")); err != nil {
+		log.Fatal(err)
+	}
+
 	fileReplacer := strings.NewReplacer(
 		"getCAROOT()", "GetCAROOT()",
 		"mkcert -install", "hugo server trust",
