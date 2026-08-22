@@ -21,6 +21,7 @@ import (
 	"regexp"
 	"runtime"
 	"runtime/debug"
+	"slices"
 	"strings"
 	"sync"
 
@@ -347,12 +348,7 @@ func storeEnabled(name string) bool {
 	if stores == "" {
 		return true
 	}
-	for _, store := range strings.Split(stores, ",") {
-		if store == name {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(strings.Split(stores, ","), name)
 }
 
 func fatalIfErr(err error, msg string) {

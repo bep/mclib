@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 )
 
@@ -38,11 +39,8 @@ var (
 
 func init() {
 	allPaths := append(append([]string{}, nssDBs...), firefoxPaths...)
-	for _, path := range allPaths {
-		if pathExists(path) {
-			hasNSS = true
-			break
-		}
+	if slices.ContainsFunc(allPaths, pathExists) {
+		hasNSS = true
 	}
 
 	switch runtime.GOOS {
